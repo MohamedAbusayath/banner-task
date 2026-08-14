@@ -5,7 +5,7 @@ const createBanner=async (data)=>{
 }
 
 const getAllBannerData=async ()=>{
-    return await Banner.find();
+    return await Banner.find().sort({ name:1});
 }
 
 const getById=async (id)=>{
