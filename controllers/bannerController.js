@@ -9,13 +9,7 @@ const createBanner=async (req,res)=>{
             desktopImage: req.files.desktopImage[0].path,
             mobileImage: req.files.mobileImage[0].path
     };     
-    const {error}=validBannerSchema.validate(bannerData);
-    if(error){
-        return res.status(400).json({
-            message:"validation error",
-            error:error
-        });
-    }
+   
     const banner=await service.createBanner(bannerData);
 
         res.status(201).json({

@@ -7,4 +7,20 @@ const validBannerSchema=Joi.object({
     desktopImage:Joi.string().required(),
     mobileImage:Joi.string().required()
 });
-module.exports=validBannerSchema;
+const validateM=(schema)=>{
+    return (req,res,next)=>{
+        const {error}=schema.validate(req.body);
+
+        if(error) return res.status(400).json(
+            {
+                message:"validation error",
+                error:error.details[0].message
+            }
+        );
+
+        next();
+    };
+};
+const validateBanner=validateM(validBannerSchema);
+
+module.exports={validateBanner};
