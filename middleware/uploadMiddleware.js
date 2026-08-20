@@ -13,21 +13,31 @@ const storage=multer.diskStorage({
         }
     },
     filename:(req,file,cb)=>{
-        const uniqueName=Date.now+"-"+Math.round(Math.random)+file.originalname;
+        const uniqueName=Date.now()+"-"+Math.round(Math.random)+file.originalname;
         //const fileName=file.originalname;
         cb(null,uniqueName);
     }
 });
-const filterFile=(req,file,cb)=>{
-    if(file.mimetype.startsWith("image/")){
-        cb(null,true);
-    }else{
-        cb(new Error("Only image files are allowed"));
+const allowedMimeTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+];
+
+const fileFilter = (req, file, cb) => {
+    console.log("File:", file.originalname);
+    console.log("MIME:", file.mimetype);
+    if (allowedMimeTypes.includes(file.mimetype)) {
+        cb(null, true);
+    } else {
+        cb(new Error("Only JPG, PNG and WEBP images are allowed"));
     }
-}
+
+};
 const upload=multer({
     storage:storage,
-    fileFilter:filterFile
+    fileFilter:fileFilter,
+    
 })
 
 module.exports=upload;

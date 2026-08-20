@@ -7,6 +7,13 @@ const multerErrorHandler=(err,req,res,next)=>{
             error:err.message
         });
     }
+    if (err) {
+
+        return res.status(400).json({
+            message: "File upload error",
+            error: err.message
+        });
+    }
     next();
 };
 
