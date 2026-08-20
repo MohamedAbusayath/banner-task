@@ -1,25 +1,35 @@
 const service=require("../service/bannerService");
-const validBannerSchema=require("../validation/bannerValidation");
+const uploadCloudinary=require("../utils/cloudinaryUpload")
 const createBanner=async (req,res)=>{
-    try{  
+    try{    
+        const desktopFile = req.files.desktopImage[0];
+        const mobileFile = req.files.mobileImage[0];
+        const desktopResult=await uploadCloudinary(
+            desktopFile.path,
+            "banners/desktop"
+        );
+        const mobileResult=await uploadCloudinary(
+            mobileFile.path,
+            "banners/mobile"
+        );
         const bannerData={
             name : req.body.name,
             link : req.body.link,
             status: req.body.status,
-            desktopImage: req.files.desktopImage[0].path,
-            mobileImage: req.files.mobileImage[0].path
-    };     
-   
+            desktopImage: desktopResult.secure_url,
+            mobileImage: mobileResult.secure_url
+        };
+
     const banner=await service.createBanner(bannerData);
 
         res.status(201).json({
             message:"Banner Create Successfully....",
             data:banner
         });
-    }catch(error){
+        }catch(error){
         res.status(500).json({
             message:"Failed to create a banner...",
-            error:error
+            error:error.message
         })
     }
 }
@@ -78,14 +88,25 @@ const deleteOneById=async (req,res)=>{
 
 const updateOneById=async (req,res)=>{
     try{
-        const bannerUpdate={
-            name:req.body.name,
-            link:req.body.link,
-            status:req.body.status,
-            desktopImage:req.files.desktopImage[0].path,
-            mobileImage:req.files.mobileImage[0].path
-        }
-        const bannerId=await service.updateByID(req.params.id,bannerUpdate);
+        const desktopFile = req.files.desktopImage[0];
+        const mobileFile = req.files.mobileImage[0];
+        const desktopResult=await uploadCloudinary(
+            desktopFile.path,
+            "banners/desktop"
+        );
+        const mobileResult=await uploadCloudinary(
+            mobileFile.path,
+            "banners/mobile"
+        );
+        const bannerData={
+            name : req.body.name,
+            link : req.body.link,
+            status: req.body.status,
+            desktopImage: desktopResult.secure_url,
+            mobileImage: mobileResult.secure_url
+        };
+
+        const bannerId=await service.updateByID(req.params.id,bannerData);
         if(!bannerId){
             return res.status(404).json({
                 message:"Banner Id not found..."
@@ -94,7 +115,7 @@ const updateOneById=async (req,res)=>{
     
         return res.status(200).json({
             message:"Updated Successfully...",
-            data:bannerUpdate
+            data:bannerData
         })
     }catch(error){
         res.status(500).json({
