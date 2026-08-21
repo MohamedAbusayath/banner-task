@@ -24,6 +24,6 @@ route.delete("/delete/:id",deleteOneById);
 route.put("/update/:id",upload.fields([
         { name: 'desktopImage', maxCount: 1 },
         { name: 'mobileImage', maxCount: 1 }
-    ]),multerErrorHandler,updateOneById);
+    ]),validateBanner,multerErrorHandler,updateOneById);
 
 module.exports=route;

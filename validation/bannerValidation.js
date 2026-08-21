@@ -3,7 +3,9 @@ const Joi=require("joi");
 const validBannerSchema=Joi.object({
     name:Joi.string().min(3).max(50).required(),
     link:Joi.string().uri().required(),
-    status:Joi.string().valid("ACTIVE","INACTIVE").trim().required()
+    status:Joi.string().valid("ACTIVE","INACTIVE").trim().required(),
+    desktopImage:Joi.string().uri().required(),
+    mobileImage:Joi.string().uri().required()
 });
 const validateM=(schema)=>{
     return (req,res,next)=>{
